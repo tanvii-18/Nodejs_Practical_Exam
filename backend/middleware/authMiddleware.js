@@ -1,4 +1,4 @@
-import jwt, { decode } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 export const registerUser = (req, res, next) => {
   const { email, password } = req.body;
