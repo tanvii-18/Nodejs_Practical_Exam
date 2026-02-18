@@ -6,9 +6,9 @@ export const register = async (req, res) => {
   const { email, password, role } = req.body;
 
   try {
-    const existingUser = await UserDataCollection.find({ email });
+    const existingUser = await UserDataCollection.findOne({ email });
 
-    if (!existingUser) {
+    if (existingUser) {
       return res.status(400).json({ message: "User Exists Already!" });
     }
 
@@ -31,7 +31,7 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await UserDataCollection.find({ email });
+    const user = await UserDataCollection.findOne({ email });
 
     console.log(user);
     if (!user) {
@@ -48,7 +48,14 @@ export const loginUser = async (req, res) => {
       expiresIn: "1d",
     });
 
-    res.status(201).json({ message: "Login Successfully!", token });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 1000 * 60 * 60 * 24,
+    });
+
+    res.status(200).json({ message: "Login Successfully!", token });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ message: "Login Failed!", error: error.message });

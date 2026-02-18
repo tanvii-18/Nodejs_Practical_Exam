@@ -1,3 +1,5 @@
+import jwt, { decode } from "jsonwebtoken";
+
 export const registerUser = (req, res, next) => {
   const { email, password } = req.body;
 
@@ -19,5 +21,18 @@ export const registerUser = (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const isAuthenticated = (req, res, next) => {
+  const token = req.cookies.token;
+
+  try {
+    const decoded = jwt.verify(token, process.env.Token);
+    req.user = decoded;
+
+    next();
+  } catch (error) {
+    return res.status(500).json({ message: "Invalid Token!" });
   }
 };
