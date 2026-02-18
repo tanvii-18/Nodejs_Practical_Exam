@@ -7,7 +7,7 @@ import recipe_Routes from "./routes/recipeRoutes.js";
 const app = express();
 connectDB();
 app.use(express.json());
-app.use(Cors());
+app.use(Cors({ origin: "http://localhost:5173", Credentials: true }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/recipes", recipe_Routes);
